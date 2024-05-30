@@ -4,11 +4,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Scanner;
 
 public class Lox {
     private static final Semantic interpreter = new Semantic();
@@ -48,9 +44,7 @@ public class Lox {
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
-        // Stop if there was a syntax error.
         if (hadError) return;
-        //System.out.println(new AstPrinter().print(statements));
         interpreter.interpret(statements);
     }
 

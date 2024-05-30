@@ -1,4 +1,3 @@
-import java.beans.Expression;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,9 +74,9 @@ public class Parser {
                 ensureTypeCompatibility(type, initializer);
             } else {
                 if (type.type == TokenType.FLOAT) {
-                    initializer = new Expr.Literal(0.0); // Default value for FLOAT is 0.0
+                    initializer = new Expr.Literal(0.0);
                 } else {
-                    initializer = new Expr.Literal(0); // Default value for other types is 0
+                    initializer = new Expr.Literal(0);
                 }
             }
             initializers.add(initializer);
@@ -102,8 +101,7 @@ public class Parser {
                 throw error(type, "Type mismatch: expected FLOAT.");
             }
         } else if (initializer instanceof Expr.Variable) {
-            // Add more complex type checks for variables if needed
-            // Here you would need to check the variable's declared type
+            
         }
     }
 
@@ -192,7 +190,7 @@ public class Parser {
         if (match(TokenType.FALSE)) return new Expr.Literal(false);
         if (match(TokenType.TRUE)) return new Expr.Literal(true);
         if (match(TokenType.NUMBER)) {
-            return new Expr.Literal(Double.parseDouble(previous().lexeme)); // Parse as double
+            return new Expr.Literal(Double.parseDouble(previous().lexeme));
         }
         if (match(TokenType.STRING)) {
             String str = previous().literal.toString();
@@ -201,12 +199,12 @@ public class Parser {
             } else if (str.equals("FALSE")) {
                 return new Expr.Literal(false);
             } else {
-                return new Expr.Literal(str); // Use the literal value directly
-            } // Use the literal value directly
+                return new Expr.Literal(str); 
+            } 
         }
 
         if (match(TokenType.CHAR)) {    
-            return new Expr.Literal(previous().literal); // Use the literal character value directly
+            return new Expr.Literal(previous().literal); 
         }
 
         if (match(TokenType.IDENTIFIER)) {
@@ -216,7 +214,7 @@ public class Parser {
         if (match(TokenType.PLUS, TokenType.MINUS, TokenType.STAR, TokenType.SLASH, TokenType.MOD)) {
                 Token operator = previous();
                 Expr right = primary();
-                return new Expr.Binary(new Expr.Literal(0), operator, right); // Assuming the left operand is 0
+                return new Expr.Binary(new Expr.Literal(0), operator, right); 
         }
         
         if (match(TokenType.LEFT_PAREN)) {
@@ -226,7 +224,7 @@ public class Parser {
         }
 
         if (match(TokenType.NLINE)) {
-            return new Expr.Literal("$"); // New line
+            return new Expr.Literal("$");
         }
     
         if (match(TokenType.CONCAT)) {
@@ -292,11 +290,6 @@ public class Parser {
 
         do {
             expressions.add(expression());
-            /*if (!check(TokenType.IDENTIFIER) && !check(TokenType.STRING)) {
-                break; // Break the loop if it's not followed by another expression
-            } else if (peek().line != previous().line) {
-                break; // Break the loop if the next token is on a different line
-            }*/
         } while (match(TokenType.CONCAT) || match(TokenType.PLUS) || match(TokenType.STAR) || match(TokenType.MINUS) || match(TokenType.SLASH) || match(TokenType.MOD));
 
         return new Stmt.DISPLAY(expressions);
@@ -318,42 +311,6 @@ public class Parser {
         Expr expr = expression();
         return new Stmt.Expression(expr);
     }
-
-    private Expr assignment() {
-        Expr expr = or();
-
-        //Expr expr = equality();
-        if (match(TokenType.EQUAL)) {
-        Token equals = previous();
-        Expr value = assignment();
-        if (expr instanceof Expr.Variable) {
-        Token name = ((Expr.Variable)expr).name;
-        return new Expr.Assign(name, value);
-        }
-        error(equals, "Invalid assignment target.");
-        }
-        return expr;
-    }
-
-    private Expr or() {
-        Expr expr = and();
-        while (match(TokenType.OR)) {
-        Token operator = previous();
-        Expr right = and();
-        expr = new Expr.Logical(expr, operator, right);
-        }
-        return expr;
-        }
-
-        private Expr and() {
-            Expr expr = equality();
-            while (match(TokenType.AND)) {
-            Token operator = previous();
-            Expr right = equality();
-            expr = new Expr.Logical(expr, operator, right);
-            }
-            return expr;
-        }
 
     private List<Stmt> block() {
         List<Stmt> statements = new ArrayList<>();

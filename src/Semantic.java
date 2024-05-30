@@ -139,19 +139,9 @@ public Object visitBinaryExpr(Expr.Binary expr) {
 
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
-    evaluate(stmt.expression);
-    return null;
-    }
-
-    /*@Override
-    public Void visitDISPLAYStmt(Stmt.DISPLAY stmt) {
-        for (Expr expression : stmt.expressions) {
-            Object value = evaluate(expression);
-            System.out.print(stringify(value));
-        }
-        System.out.println(); 
+        evaluate(stmt.expression);
         return null;
-    }*/
+    }
 
     @Override
     public Void visitDISPLAYStmt(Stmt.DISPLAY stmt) {
@@ -162,7 +152,7 @@ public Object visitBinaryExpr(Expr.Binary expr) {
         if (value instanceof String) {
             String str = (String) value;
             if (str.equals("$")) {
-                System.out.print(""); 
+                System.out.println(); 
             } else {
                 output.append(str);
             }
@@ -179,9 +169,9 @@ public Object visitBinaryExpr(Expr.Binary expr) {
 private void handleEscapeCode(Expr.EscapeCode escapeCode, StringBuilder output) {
     char code = escapeCode.code;
     switch (code) {
-        /*case '$':
+        case '$':
             output.append(System.lineSeparator());
-            break;*/
+            break;
         case '[':
             output.append('[');
             break;
@@ -189,7 +179,6 @@ private void handleEscapeCode(Expr.EscapeCode escapeCode, StringBuilder output) 
             output.append(']'); 
             break;
         default:
-            // Handle other escape codes if needed
             break;
     }
 }
@@ -305,13 +294,11 @@ private void handleEscapeCode(Expr.EscapeCode escapeCode, StringBuilder output) 
 
     @Override
     public Object visitConcatenationExpr(Expr.Concatenation expr) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visitConcatenationExpr'");
     }
 
     @Override
     public Object visitEscapeCodeExpr(Expr.EscapeCode expr) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visitEscapeCodeExpr'");
     }
  }

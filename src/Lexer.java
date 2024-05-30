@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Lexer {
     private final String source;
@@ -16,10 +15,6 @@ public class Lexer {
         keywords = new HashMap<>();
         keywords.put("BEGIN CODE", TokenType.BEGIN);
         keywords.put("END CODE", TokenType.END);
-        /*keywords.put("BEGIN IF", TokenType.BEGIN_IF);
-        keywords.put("END IF", TokenType.END_IF);
-        keywords.put("BEGIN WHILE", TokenType.BEGIN_WHILE);
-        keywords.put("END WHILE", TokenType.END_WHILE);*/
         keywords.put("ELSE", TokenType.ELSE);
         keywords.put("IF", TokenType.IF);
         keywords.put("DISPLAY", TokenType.DISPLAY);
@@ -41,7 +36,7 @@ public class Lexer {
 
     List<Token> scanTokens() {
         while (!isAtEnd()) {
-        // We are at the beginning of the next lexeme.
+        
         start = current;
         scanToken();
         }
@@ -88,9 +83,7 @@ public class Lexer {
         Lox.error(line, "Unterminated string.");
         return;
         }
-        // The closing ".
         advance();
-        // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
         addToken(TokenType.STRING, value);
     }
@@ -101,9 +94,7 @@ public class Lexer {
 
     private void number() {
         while (isDigit(peek())) advance();
-        // Look for a fractional part.
         if (peek() == '.' && isDigit(peekNext())) {
-            // Consume the "."
             advance();
             while (isDigit(peek())) advance();
         }
@@ -155,7 +146,6 @@ public class Lexer {
         case '+': addToken(TokenType.PLUS); break;
         case ':': addToken(TokenType.COLON); break;
         case '*': addToken(TokenType.STAR); break;
-        //case '!': addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
         case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
         case '<':
             if (match('>')) {
@@ -187,7 +177,6 @@ public class Lexer {
         case ' ':
         case '\r':
         case '\t':
-        // Ignore whitespace.
                   break;
         case '\n': line++; break;
         case '"': string(); break;
@@ -246,8 +235,7 @@ public class Lexer {
                 return false;
             }
         }
-    
-        // Make sure the character following the keyword is not a valid identifier character
+
         if (current + expected.length() < source.length() && isAlphaNumeric(source.charAt(current + expected.length()))) {
             return false;
         }
